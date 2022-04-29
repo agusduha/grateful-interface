@@ -29,6 +29,8 @@ const Account = () => {
     fetchEns: true,
   });
 
+  const address = accountData?.address;
+
   useEffect(() => {
     if (connected) {
       onClose();
@@ -36,9 +38,11 @@ const Account = () => {
   }, [connected, onClose]);
 
   return (
-    <Box>
+    <Box position="fixed" top={6} right={10}>
       {!accountData ? <Button onClick={onOpen}>Connect</Button> : <Button onClick={disconnect}>Disconnect</Button>}
-      <Text>{accountData?.address}</Text>
+      {address && (
+        <Text>{address.substring(0, 6) + "..." + address.substring(address.length - 4, address.length)}</Text>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

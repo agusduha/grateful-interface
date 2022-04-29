@@ -1,11 +1,12 @@
 import { Box, Button } from "@chakra-ui/react";
 import { useContractWrite } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
+import { GRATEFUL_ADDRESS } from "../../constants";
 
 const Subscribe = () => {
   const [{ data, error, loading }, write] = useContractWrite(
     {
-      addressOrName: "0xefAB0Beb0A557E452b398035eA964948c750b2Fd",
+      addressOrName: GRATEFUL_ADDRESS,
       contractInterface: GratefulContract.abi,
     },
     "subscribeToCreator",

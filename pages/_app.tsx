@@ -1,7 +1,8 @@
 import type { AppProps } from "next/app";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { developmentChains, InjectedConnector, WagmiProvider } from "wagmi";
 import { providers } from "ethers";
+import theme from "../styles/theme";
 
 const provider = () => new providers.JsonRpcProvider();
 
@@ -20,7 +21,7 @@ const connectors = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider>
+    <ChakraProvider resetCSS theme={theme}>
       <WagmiProvider autoConnect connectors={connectors} provider={provider}>
         <Component {...pageProps} />
       </WagmiProvider>
