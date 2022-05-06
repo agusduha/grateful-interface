@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Center,
   FormLabel,
   Modal,
   ModalBody,
@@ -14,6 +15,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -26,8 +28,13 @@ import { DAI_MAINNET_ADDRESS, GRATEFUL_ADDRESS } from "../../constants";
 import useTransactionToast from "../../hooks/useTransactionToast";
 
 interface DepositProps {
-  balance: string | undefined;
-  allowance: string | undefined;
+  balance?: string;
+  allowance?: string;
+}
+
+interface ResultProps {
+  data?: ethers.providers.TransactionResponse;
+  error?: Error;
 }
 
 const Deposit = ({ balance, allowance }: DepositProps) => {
@@ -35,7 +42,7 @@ const Deposit = ({ balance, allowance }: DepositProps) => {
   const [value, setValue] = useState("0");
   const handleChange = (value: string) => setValue(value);
 
-  const [, approve] = useContractWrite(
+  const [{ loading: approveLoading }, approve] = useContractWrite(
     {
       addressOrName: DAI_MAINNET_ADDRESS,
       contractInterface: erc20ABI,
@@ -43,7 +50,7 @@ const Deposit = ({ balance, allowance }: DepositProps) => {
     "approve"
   );
 
-  const [, depositFunds] = useContractWrite(
+  const [{ loading: depositLoading }, depositFunds] = useContractWrite(
     {
       addressOrName: GRATEFUL_ADDRESS,
       contractInterface: GratefulContract.abi,
@@ -51,18 +58,26 @@ const Deposit = ({ balance, allowance }: DepositProps) => {
     "depositFunds"
   );
 
+  const isLoading = approveLoading || depositLoading;
+
   const { showToast } = useTransactionToast();
+
+  const handleResult = (result: ResultProps) => {
+    const { data } = result;
+    if (data) {
+      showToast(data.hash);
+      onClose();
+    }
+  };
 
   const onApprove = async () => {
     const result = await approve({ args: [GRATEFUL_ADDRESS, ethers.utils.parseEther(value)] });
-    showToast(result.data?.hash);
-    onClose();
+    handleResult(result);
   };
 
   const onDeposit = async () => {
     const result = await depositFunds({ args: ethers.utils.parseEther(value) });
-    showToast(result.data?.hash);
-    onClose();
+    handleResult(result);
   };
 
   return (
@@ -98,17 +113,25 @@ const Deposit = ({ balance, allowance }: DepositProps) => {
               {/* </FormControl> */}
             </Box>
           </ModalBody>
-          <ModalFooter>
-            <Button mr={3} onClick={onApprove}>
-              Allow DAI
-            </Button>
-            <Button mr={3} onClick={onDeposit}>
-              Send deposit
-            </Button>
-            <Button onClick={onClose} variant="outline">
-              Cancel deposit
-            </Button>
-          </ModalFooter>
+          {isLoading ? (
+            <ModalFooter>
+              <Center w={"100%"}>
+                <Spinner />
+              </Center>
+            </ModalFooter>
+          ) : (
+            <ModalFooter>
+              <Button mr={3} onClick={onApprove}>
+                Allow DAI
+              </Button>
+              <Button mr={3} onClick={onDeposit}>
+                Send deposit
+              </Button>
+              <Button onClick={onClose} variant="outline">
+                Cancel deposit
+              </Button>
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
     </Box>
