@@ -1,7 +1,9 @@
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Heading,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,6 +12,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Connector, useAccount, useConnect } from "wagmi";
@@ -38,11 +41,16 @@ const Account = () => {
   }, [connected, onClose]);
 
   return (
-    <Box position="fixed" top={6} right={10}>
-      {!accountData ? <Button onClick={onOpen}>Connect</Button> : <Button onClick={disconnect}>Disconnect</Button>}
-      {address && (
-        <Text>{address.substring(0, 6) + "..." + address.substring(address.length - 4, address.length)}</Text>
-      )}
+    <Box position="fixed" top={4} right={10}>
+      <VStack>
+        {!accountData ? <Button onClick={onOpen}>Connect</Button> : <Button onClick={disconnect}>Disconnect</Button>}
+        {address && (
+          <Link href={`https://etherscan.io/address/${address}`} isExternal>
+            {address.substring(0, 6) + "..." + address.substring(address.length - 4, address.length)}{" "}
+            <ExternalLinkIcon mx="2px" />
+          </Link>
+        )}
+      </VStack>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

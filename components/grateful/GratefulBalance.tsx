@@ -59,6 +59,7 @@ const GratefulBalance = () => {
   const incomingFlow: BigNumber = userData ? userData[0] : BigNumber.from(0);
   const outgoingFlow: BigNumber = userData ? userData[1] : BigNumber.from(0);
   const totalFlow = incomingFlow.sub(outgoingFlow);
+  const daiTotalFlow = getCurrentPrice(totalFlow);
 
   const monthIncomingFlow = getMonthValue(getCurrentPrice(incomingFlow));
   const monthOutgoingFlow = getMonthValue(getCurrentPrice(outgoingFlow));
@@ -70,7 +71,7 @@ const GratefulBalance = () => {
       {accountData && (
         <>
           <BalanceCounter label={"Vault balance:"} symbol={"yvDAI"} balance={balance} flow={totalFlow} freq={1} />
-          <BalanceCounter label={"DAI balance:"} symbol={"DAI"} balance={daiBalance} flow={totalFlow} freq={1} />
+          <BalanceCounter label={"DAI balance:"} symbol={"DAI"} balance={daiBalance} flow={daiTotalFlow} freq={1} />
           <Text>{`Incoming flow: ${(+formatEther(monthIncomingFlow)).toFixed(4)} DAI per month`}</Text>
           <Text>{`Outgoing flow: ${(+formatEther(monthOutgoingFlow)).toFixed(4)} DAI per month`}</Text>
           <Text>{`Total flow: ${(+formatEther(monthTotalFlow)).toFixed(4)} DAI per month`}</Text>
