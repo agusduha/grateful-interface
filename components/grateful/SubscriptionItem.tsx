@@ -1,11 +1,14 @@
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Divider, Flex, Link, Spacer, Text } from "@chakra-ui/react";
+import { Divider, Flex, Link, Spacer, Tag, Text } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect } from "react";
 import { useAccount, useContractRead } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
+import useCreator from "../../hooks/useCreator";
+import useLabel from "../../hooks/useLabel";
+import CreateLabel from "./CreateLabel";
 import Unsubscribe from "./Unsubscribe";
 
 interface SubscriptionItemProps {
@@ -14,6 +17,13 @@ interface SubscriptionItemProps {
 
 const SubscriptionItem = ({ creator }: SubscriptionItemProps) => {
   const [{ data: accountData }] = useAccount();
+
+  const { creator: creatorData } = useCreator(creator);
+  const isCreator = !!creatorData?.address;
+
+  const user = accountData?.address || "";
+  const { label } = useLabel(user, creator);
+  const hasLabel = !!label?.content;
 
   const [{ data: giverToCreatorFlow }, getGiverToCreatorFlow] = useContractRead(
     {
@@ -47,20 +57,39 @@ const SubscriptionItem = ({ creator }: SubscriptionItemProps) => {
 
   const total = getMonthValue(getCurrentPrice(flow));
 
+  const addressLink = () => (
+    <Link href={`https://etherscan.io/address/${creator}`} isExternal>
+      {creator.substring(0, 6) + "..." + creator.substring(creator.length - 4, creator.length)}{" "}
+      <ExternalLinkIcon mx="2px" />
+    </Link>
+  );
+
+  const labelTag = () => {
+    if (hasLabel) {
+      return (
+        <Tag ml={1} variant="subtle" colorScheme="cyan">
+          {label.content}
+        </Tag>
+      );
+    }
+  };
+
   return (
     <>
       <Flex alignItems={"center"}>
-        <Text>
-          Creator ID (
-          <Link href={`https://etherscan.io/address/${creator}`} isExternal>
-            {creator.substring(0, 6) + "..." + creator.substring(creator.length - 4, creator.length)}{" "}
-            <ExternalLinkIcon mx="2px" />
-          </Link>
-          )
-        </Text>
+        {isCreator ? (
+          <Text>
+            {creatorData.name} ({addressLink()}) {labelTag()}
+          </Text>
+        ) : (
+          <Text>
+            {addressLink()} {labelTag()}
+          </Text>
+        )}
         <Spacer />
         <Text>{`${(+formatEther(total)).toFixed(0)} DAI per month`}</Text>
         <Spacer />
+        {accountData && <CreateLabel user={accountData?.address} creator={creator} />}
         <Unsubscribe creator={creator} />
       </Flex>
       <Divider />

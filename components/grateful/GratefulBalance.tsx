@@ -1,11 +1,12 @@
-import { Box, Center, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
-import { BigNumber, ethers } from "ethers";
+import { Center, Flex, Heading, HStack, Spacer, StatUpArrow, Text } from "@chakra-ui/react";
+import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect } from "react";
 import { useAccount, useContractRead } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
 import BalanceCounter from "./BalanceCounter";
+import Profile from "./Profile";
 import Subscribe from "./Subscribe";
 
 const GratefulBalance = () => {
@@ -70,13 +71,21 @@ const GratefulBalance = () => {
       <Heading>Grateful balance</Heading>
       {accountData && (
         <>
-          <BalanceCounter label={"Vault balance:"} symbol={"yvDAI"} balance={balance} flow={totalFlow} freq={1} />
+          <HStack>
+            <BalanceCounter label={"Vault balance:"} symbol={"yvDAI"} balance={balance} flow={totalFlow} freq={1} />
+            <Center>
+              (<StatUpArrow />
+              <Text color={"green"}>2.14%</Text>)
+            </Center>
+          </HStack>
+
           <BalanceCounter label={"DAI balance:"} symbol={"DAI"} balance={daiBalance} flow={daiTotalFlow} freq={1} />
           <Text>{`Incoming flow: ${(+formatEther(monthIncomingFlow)).toFixed(4)} DAI per month`}</Text>
           <Text>{`Outgoing flow: ${(+formatEther(monthOutgoingFlow)).toFixed(4)} DAI per month`}</Text>
           <Text>{`Total flow: ${(+formatEther(monthTotalFlow)).toFixed(4)} DAI per month`}</Text>
           <Spacer />
-          <Center m={2}>
+          <Center m={2} justifyContent={"space-evenly"}>
+            <Profile address={accountData.address} />
             <Subscribe balance={formatEther(daiBalance)} />
           </Center>
         </>

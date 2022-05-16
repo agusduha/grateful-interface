@@ -91,7 +91,7 @@ const Deposit = ({ balance, allowance }: DepositProps) => {
           <ModalCloseButton />
           <ModalBody m={2}>
             <Box>
-              <Text>{`Wallet balance: ${Number(balance).toFixed(4)} DAI`}</Text>
+              {balance && <Text>{`Wallet balance: ${Number(balance).toFixed(4)} DAI`}</Text>}
               {allowance && <Text>{`Currently allowed: ${formatEther(BigNumber.from(allowance))} DAI`}</Text>}
               {/* <FormControl isRequired> */}
               <FormLabel htmlFor="amount">Amount</FormLabel>

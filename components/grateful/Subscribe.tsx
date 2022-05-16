@@ -29,6 +29,10 @@ import useTransactionToast from "../../hooks/useTransactionToast";
 
 interface SubscribeProps {
   balance?: string;
+  creator?: {
+    address?: string;
+    name?: string;
+  };
 }
 
 interface ResultProps {
@@ -36,10 +40,10 @@ interface ResultProps {
   error?: Error;
 }
 
-const Subscribe = ({ balance }: SubscribeProps) => {
+const Subscribe = ({ balance, creator }: SubscribeProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState(creator?.address || "");
   const handleChange = (event: any) => setAddress(event.target.value);
 
   const [tier, setTier] = useState(0);
@@ -68,6 +72,8 @@ const Subscribe = ({ balance }: SubscribeProps) => {
     handleResult(result);
   };
 
+  const title = !!creator ? `Subscribe to ${creator.name}` : "Subscribe to a creator";
+
   return (
     <Box>
       <Button onClick={onOpen}>Subscribe</Button>
@@ -75,13 +81,19 @@ const Subscribe = ({ balance }: SubscribeProps) => {
       <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Subscribe to a creator</ModalHeader>
+          <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody m={2}>
             <Box>
               <Text>{`Current balance: ${Number(balance).toFixed(4)} DAI`}</Text>
-              <FormLabel htmlFor="address">Creator address</FormLabel>
-              <Input id="address" placeholder="0x..." value={address} onChange={handleChange} />
+
+              {!creator && (
+                <>
+                  <FormLabel htmlFor="address">Creator address</FormLabel>
+                  <Input id="address" placeholder="0x..." value={address} onChange={handleChange} />
+                </>
+              )}
+
               <FormLabel htmlFor="tier" mt={4}>
                 Select tier (per month)
               </FormLabel>
