@@ -7,6 +7,7 @@ import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
 import BalanceCounter from "./BalanceCounter";
 import Profile from "./Profile";
+import SendGratitude from "./SendGratitude";
 import Subscribe from "./Subscribe";
 
 const GratefulBalance = () => {
@@ -87,6 +88,7 @@ const GratefulBalance = () => {
           <Center m={2} justifyContent={"space-evenly"}>
             <Profile address={accountData.address} />
             <Subscribe balance={formatEther(daiBalance)} />
+            <SendGratitude balance={formatEther(daiBalance)} />
           </Center>
         </>
       )}
