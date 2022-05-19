@@ -1,5 +1,4 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Divider, Flex, Link, Spacer, Tag, Text } from "@chakra-ui/react";
+import { Divider, Flex, Spacer, Tag, Text } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect } from "react";
@@ -8,6 +7,7 @@ import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
 import useCreator from "../../hooks/useCreator";
 import useLabel from "../../hooks/useLabel";
+import Address from "./Address";
 import CreateLabel from "./CreateLabel";
 import Unsubscribe from "./Unsubscribe";
 
@@ -57,12 +57,7 @@ const SubscriptionItem = ({ creator }: SubscriptionItemProps) => {
 
   const total = getMonthValue(getCurrentPrice(flow));
 
-  const addressLink = () => (
-    <Link href={`https://etherscan.io/address/${creator}`} isExternal>
-      {creator.substring(0, 6) + "..." + creator.substring(creator.length - 4, creator.length)}{" "}
-      <ExternalLinkIcon mx="2px" />
-    </Link>
-  );
+  const addressLink = () => <Address address={creator} />;
 
   const labelTag = () => {
     if (hasLabel) {
