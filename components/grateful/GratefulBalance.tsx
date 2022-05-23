@@ -9,6 +9,7 @@ import BalanceCounter from "./BalanceCounter";
 import Profile from "./Profile";
 import SendGratitude from "./SendGratitude";
 import Subscribe from "./Subscribe";
+import Withdraw from "./Withdraw";
 
 const GratefulBalance = () => {
   const [{ data: accountData }] = useAccount();
@@ -89,6 +90,7 @@ const GratefulBalance = () => {
             <Profile address={accountData.address} />
             <Subscribe balance={formatEther(daiBalance)} />
             <SendGratitude balance={formatEther(daiBalance)} />
+            <Withdraw balance={formatEther(daiBalance)} />
           </Center>
         </>
       )}
