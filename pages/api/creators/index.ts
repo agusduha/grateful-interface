@@ -1,12 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Creator, PrismaClient } from "@prisma/client";
+import { withIronSessionApiRoute } from "iron-session/next";
+import { ironOptions } from "../../../ironConfig";
 
 const prisma = new PrismaClient();
 
-type Data = Creator | Creator[];
+type Error = { error: string };
+type Data = Creator | Creator[] | Error;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { method } = req;
   switch (method) {
     case "GET":
@@ -15,7 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       break;
 
     case "POST":
-      const { address, name, tag } = req.body;
+      if (!req.session.siwe) {
+        res.status(401).json({ error: "You have to first sign in" });
+        break;
+      }
+
+      const address = req.session.siwe?.address;
+      const { name, tag } = req.body;
       const result = await prisma.creator.create({ data: { address, name, tag } });
       res.status(200).json(result);
       break;
@@ -24,4 +33,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.setHeader("Allow", ["GET", "POST"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
-}
+};
+
+export default withIronSessionApiRoute(handler, ironOptions);

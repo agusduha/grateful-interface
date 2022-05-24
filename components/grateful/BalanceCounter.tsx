@@ -19,12 +19,16 @@ const BalanceCounter = ({ label, symbol, balance, flow, freq }: BalanceCounterPr
   }, [balance]);
 
   useEffect(() => {
-    const id = setInterval(() => setCount((oldBalance: BigNumber) => oldBalance.add(flow.div(freq))), 1000 / freq);
+    let id: any;
+
+    if (balance.gt(0)) {
+      id = setInterval(() => setCount((oldBalance: BigNumber) => oldBalance.add(flow.div(freq))), 1000 / freq);
+    }
 
     return () => {
       clearInterval(id);
     };
-  }, [flow, freq, setCount]);
+  }, [flow, freq, setCount, balance]);
 
   return <Text>{`${label} ${formatEther(count)} ${symbol}`}</Text>;
 };

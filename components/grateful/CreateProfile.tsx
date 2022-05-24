@@ -16,7 +16,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Login from "./Login";
 
 interface CreateProfileProps {
   address: string;
@@ -28,6 +29,7 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
   const toast = useToast();
 
   const [isLoading, setLoading] = useState(false);
+  const [isSignedIn, setSignedIn] = useState(false);
 
   const [name, setName] = useState("");
   const handleName = (event: any) => setName(event.target.value);
@@ -39,7 +41,7 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address, name, tag }),
+      body: JSON.stringify({ name, tag }),
     };
 
     setLoading(true);
@@ -56,6 +58,41 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
     setLoading(false);
   };
 
+  const handler = async () => {
+    try {
+      const res = await fetch("/api/auth/me");
+      const json = await res.json();
+      setSignedIn(!!json.address);
+    } catch (_error) {
+      setSignedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      handler();
+    }
+  }, [isOpen]);
+
+  const footer = () => {
+    return isLoading ? (
+      <ModalFooter>
+        <Center w={"100%"}>
+          <Spinner />
+        </Center>
+      </ModalFooter>
+    ) : (
+      <ModalFooter>
+        <Button mr={3} onClick={onCreate}>
+          Create
+        </Button>
+        <Button onClick={onClose} variant="outline">
+          Cancel
+        </Button>
+      </ModalFooter>
+    );
+  };
+
   return (
     <Box>
       <Button onClick={onOpen}>Create Profile</Button>
@@ -65,34 +102,29 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
         <ModalContent>
           <ModalHeader>Create your profile</ModalHeader>
           <ModalCloseButton />
-          <ModalBody m={2}>
-            <Box>
-              <Text>{`Current address: ${address}`}</Text>
-              <FormLabel htmlFor="name" mt={4}>
-                Name
-              </FormLabel>
-              <Input id="name" placeholder="Insert your name" value={name} onChange={handleName} />
-              <FormLabel htmlFor="tag" mt={4}>
-                Tag
-              </FormLabel>
-              <Input id="tag" placeholder="Insert your tag" value={tag} onChange={handleTag} />
-            </Box>
-          </ModalBody>
-          {isLoading ? (
-            <ModalFooter>
-              <Center w={"100%"}>
-                <Spinner />
-              </Center>
-            </ModalFooter>
+          {isSignedIn ? (
+            <>
+              <ModalBody m={2}>
+                <Box>
+                  <Text>{`Current address: ${address}`}</Text>
+                  <FormLabel htmlFor="name" mt={4}>
+                    Name
+                  </FormLabel>
+                  <Input id="name" placeholder="Insert your name" value={name} onChange={handleName} />
+                  <FormLabel htmlFor="tag" mt={4}>
+                    Tag
+                  </FormLabel>
+                  <Input id="tag" placeholder="Insert your tag" value={tag} onChange={handleTag} />
+                </Box>
+              </ModalBody>
+              {footer()}
+            </>
           ) : (
-            <ModalFooter>
-              <Button mr={3} onClick={onCreate}>
-                Create
-              </Button>
-              <Button onClick={onClose} variant="outline">
-                Cancel
-              </Button>
-            </ModalFooter>
+            <ModalBody m={2}>
+              <Center>
+                <Login address={address} menu={false} onSignIn={handler} />
+              </Center>
+            </ModalBody>
           )}
         </ModalContent>
       </Modal>

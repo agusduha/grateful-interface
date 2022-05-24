@@ -18,19 +18,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface CreateLabelProps {
-  user: string;
   creator: string;
 }
 
-const CreateLabel = ({ user, creator }: CreateLabelProps) => {
+const CreateLabel = ({ creator }: CreateLabelProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
   const [isLoading, setLoading] = useState(false);
+  const [isSignedIn, setSignedIn] = useState(false);
 
   const [label, setLabel] = useState("");
   const handleLabel = (event: any) => setLabel(event.target.value);
@@ -39,7 +39,7 @@ const CreateLabel = ({ user, creator }: CreateLabelProps) => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user, creator, content: label }),
+      body: JSON.stringify({ creator, content: label }),
     };
 
     setLoading(true);
@@ -56,6 +56,22 @@ const CreateLabel = ({ user, creator }: CreateLabelProps) => {
     setLoading(false);
   };
 
+  const handler = async () => {
+    try {
+      const res = await fetch("/api/auth/me");
+      const json = await res.json();
+      setSignedIn(!!json.address);
+    } catch (_error) {
+      setSignedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      handler();
+    }
+  }, [isOpen]);
+
   return (
     <Box>
       <IconButton aria-label="Edit label" variant="outline" mr={1} icon={<EditIcon />} onClick={onOpen} />
@@ -65,30 +81,38 @@ const CreateLabel = ({ user, creator }: CreateLabelProps) => {
         <ModalContent>
           <ModalHeader>Create label for creator</ModalHeader>
           <ModalCloseButton />
-          <ModalBody m={2}>
-            <Box>
-              <Text>{`Creator address: ${creator}`}</Text>
-              <FormLabel htmlFor="label" mt={4}>
-                Label
-              </FormLabel>
-              <Input id="label" placeholder="Insert your label" value={label} onChange={handleLabel} />
-            </Box>
-          </ModalBody>
-          {isLoading ? (
-            <ModalFooter>
-              <Center w={"100%"}>
-                <Spinner />
-              </Center>
-            </ModalFooter>
+          {isSignedIn ? (
+            <>
+              <ModalBody m={2}>
+                <Box>
+                  <Text>{`Creator address: ${creator}`}</Text>
+                  <FormLabel htmlFor="label" mt={4}>
+                    Label
+                  </FormLabel>
+                  <Input id="label" placeholder="Insert your label" value={label} onChange={handleLabel} />
+                </Box>
+              </ModalBody>
+              {isLoading ? (
+                <ModalFooter>
+                  <Center w={"100%"}>
+                    <Spinner />
+                  </Center>
+                </ModalFooter>
+              ) : (
+                <ModalFooter>
+                  <Button mr={3} onClick={onCreate}>
+                    Create
+                  </Button>
+                  <Button onClick={onClose} variant="outline">
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              )}
+            </>
           ) : (
-            <ModalFooter>
-              <Button mr={3} onClick={onCreate}>
-                Create
-              </Button>
-              <Button onClick={onClose} variant="outline">
-                Cancel
-              </Button>
-            </ModalFooter>
+            <ModalBody m={2}>
+              <Center>You need to be signed in</Center>
+            </ModalBody>
           )}
         </ModalContent>
       </Modal>

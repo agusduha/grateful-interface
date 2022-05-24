@@ -1,6 +1,11 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,6 +18,7 @@ import {
 import { useEffect } from "react";
 import { Connector, useAccount, useConnect } from "wagmi";
 import Address from "./Address";
+import Login from "./Login";
 
 const Account = () => {
   const [
@@ -38,10 +44,21 @@ const Account = () => {
   }, [connected, onClose]);
 
   return (
-    <Box position="fixed" top={4} right={10}>
+    <Box position="fixed" top={6} right={10}>
       <VStack>
-        {!accountData ? <Button onClick={onOpen}>Connect</Button> : <Button onClick={disconnect}>Disconnect</Button>}
-        {address && <Address address={address} />}
+        {!accountData ? (
+          <Button onClick={onOpen}>Connect</Button>
+        ) : (
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              {address && <Address address={address} link={false} />}
+            </MenuButton>
+            <MenuList>
+              <Login address={accountData.address} />
+              <MenuItem onClick={disconnect}>Disconnect</MenuItem>
+            </MenuList>
+          </Menu>
+        )}
       </VStack>
 
       <Modal isOpen={isOpen} onClose={onClose}>

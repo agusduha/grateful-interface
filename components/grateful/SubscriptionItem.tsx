@@ -84,7 +84,7 @@ const SubscriptionItem = ({ creator }: SubscriptionItemProps) => {
         <Spacer />
         <Text>{`${(+formatEther(total)).toFixed(0)} DAI per month`}</Text>
         <Spacer />
-        {accountData && <CreateLabel user={accountData?.address} creator={creator} />}
+        <CreateLabel creator={creator} />
         <Unsubscribe creator={creator} />
       </Flex>
       <Divider />

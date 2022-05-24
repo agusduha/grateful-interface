@@ -4,9 +4,10 @@ import { useEnsLookup } from "wagmi";
 
 interface AddressProps {
   address: string;
+  link?: boolean;
 }
 
-const Address = ({ address }: AddressProps) => {
+const Address = ({ address, link = true }: AddressProps) => {
   const [{ data: ens }] = useEnsLookup({
     address,
   });
@@ -19,7 +20,7 @@ const Address = ({ address }: AddressProps) => {
     <>
       {address && (
         <Link href={`https://etherscan.io/address/${address}`} isExternal>
-          {value()} <ExternalLinkIcon mx="2px" />
+          {value()} {link && <ExternalLinkIcon mx="2px" />}
         </Link>
       )}
     </>
