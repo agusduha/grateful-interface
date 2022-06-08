@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAccount, useContractRead } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
+import usePricePerShare from "../../hooks/usePricePerShare";
 import BalanceCounter from "./BalanceCounter";
 import Profile from "./Profile";
 import SendGratitude from "./SendGratitude";
@@ -26,13 +27,7 @@ const GratefulBalance = () => {
     }
   );
 
-  const [{ data: priceData }] = useContractRead(
-    {
-      addressOrName: GRATEFUL_ADDRESS,
-      contractInterface: GratefulContract.abi,
-    },
-    "pricePerShare"
-  );
+  const { priceData } = usePricePerShare();
 
   const [{ data: userData }, read] = useContractRead(
     {

@@ -4,7 +4,7 @@ import { developmentChains, InjectedConnector, WagmiProvider } from "wagmi";
 import { providers } from "ethers";
 import theme from "../styles/theme";
 
-const provider = () => new providers.JsonRpcProvider();
+const provider = () => new providers.JsonRpcProvider(process.env.NEXT_PUBLIC_TENDERLY_JSON_RPC_URL);
 
 const chains = developmentChains;
 

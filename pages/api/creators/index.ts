@@ -24,8 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       }
 
       const address = req.session.siwe?.address;
-      const { name, tag } = req.body;
-      const result = await prisma.creator.create({ data: { address, name, tag } });
+      const { name, tag, description } = req.body;
+      const result = await prisma.creator.create({ data: { address, name, tag, description } });
       res.status(200).json(result);
       break;
 

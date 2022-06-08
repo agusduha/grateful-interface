@@ -7,6 +7,7 @@ import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
 import useCreator from "../../hooks/useCreator";
 import useLabel from "../../hooks/useLabel";
+import usePricePerShare from "../../hooks/usePricePerShare";
 import Address from "./Address";
 import CreateLabel from "./CreateLabel";
 import Unsubscribe from "./Unsubscribe";
@@ -36,13 +37,7 @@ const SubscriptionItem = ({ creator }: SubscriptionItemProps) => {
     }
   );
 
-  const [{ data: priceData }] = useContractRead(
-    {
-      addressOrName: GRATEFUL_ADDRESS,
-      contractInterface: GratefulContract.abi,
-    },
-    "pricePerShare"
-  );
+  const { priceData } = usePricePerShare();
 
   useEffect(() => {
     getGiverToCreatorFlow({ args: [accountData?.address, creator] });

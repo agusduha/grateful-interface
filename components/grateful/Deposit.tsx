@@ -94,7 +94,7 @@ const Deposit = ({ balance, allowance }: DepositProps) => {
               {balance && <Text>{`Wallet balance: ${Number(balance).toFixed(4)} DAI`}</Text>}
               {allowance && <Text>{`Currently allowed: ${formatEther(BigNumber.from(allowance))} DAI`}</Text>}
               {/* <FormControl isRequired> */}
-              <FormLabel htmlFor="amount">Amount</FormLabel>
+              <FormLabel htmlFor="amount">DAI Amount</FormLabel>
               <NumberInput
                 value={value}
                 max={Number(balance)}

@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -34,6 +35,9 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
   const [name, setName] = useState("");
   const handleName = (event: any) => setName(event.target.value);
 
+  const [description, setDescription] = useState("");
+  const handleDesc = (event: any) => setDescription(event.target.value);
+
   const [tag, setTag] = useState("");
   const handleTag = (event: any) => setTag(event.target.value);
 
@@ -41,7 +45,7 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, tag }),
+      body: JSON.stringify({ name, tag, description }),
     };
 
     setLoading(true);
@@ -111,6 +115,16 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
                     Name
                   </FormLabel>
                   <Input id="name" placeholder="Insert your name" value={name} onChange={handleName} />
+                  <FormLabel htmlFor="description" mt={4}>
+                    Description
+                  </FormLabel>
+                  <Textarea
+                    id="description"
+                    placeholder="Insert a description"
+                    value={description}
+                    onChange={handleDesc}
+                    resize={"none"}
+                  />
                   <FormLabel htmlFor="tag" mt={4}>
                     Tag
                   </FormLabel>

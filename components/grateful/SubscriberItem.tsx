@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAccount, useContractRead } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
+import usePricePerShare from "../../hooks/usePricePerShare";
 import Address from "./Address";
 
 interface SubscriberItemProps {
@@ -25,13 +26,7 @@ const SubscriberItem = ({ creator }: SubscriberItemProps) => {
     }
   );
 
-  const [{ data: priceData }] = useContractRead(
-    {
-      addressOrName: GRATEFUL_ADDRESS,
-      contractInterface: GratefulContract.abi,
-    },
-    "pricePerShare"
-  );
+  const { priceData } = usePricePerShare();
 
   useEffect(() => {
     getGiverToCreatorFlow({ args: [creator, accountData?.address] });

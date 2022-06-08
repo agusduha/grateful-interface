@@ -14,6 +14,7 @@ import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect } from "react";
 import Deposit from "../components/grateful/Deposit";
+import usePricePerShare from "../hooks/usePricePerShare";
 
 const Crreator: NextPage = () => {
   const router = useRouter();
@@ -35,13 +36,7 @@ const Crreator: NextPage = () => {
     }
   );
 
-  const [{ data: priceData }] = useContractRead(
-    {
-      addressOrName: GRATEFUL_ADDRESS,
-      contractInterface: GratefulContract.abi,
-    },
-    "pricePerShare"
-  );
+  const { priceData } = usePricePerShare();
 
   const [{ data: giverToCreatorFlow }, getGiverToCreatorFlow] = useContractRead(
     {
@@ -76,11 +71,12 @@ const Crreator: NextPage = () => {
       {isCreator && (
         <>
           <Heading>{creator.name}</Heading>
+          <Text>{creator.description}</Text>
           <Text>Grateful ID: {creator.id}</Text>
 
           <Text>
             Creator address:{" "}
-            <Link href={`https://etherscan.io/address/${creator}`} isExternal>
+            <Link href={`https://etherscan.io/address/${creator.address}`} isExternal>
               {creator.address} <ExternalLinkIcon mx="2px" />
             </Link>
           </Text>

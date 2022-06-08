@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useContractRead, useContractWrite } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
+import usePricePerShare from "../../hooks/usePricePerShare";
 import useTransactionToast from "../../hooks/useTransactionToast";
 
 interface SendGratitudeProps {
@@ -58,13 +59,7 @@ const SendGratitude = ({ balance, creator }: SendGratitudeProps) => {
     "sendGratitude"
   );
 
-  const [{ data: priceData }] = useContractRead(
-    {
-      addressOrName: GRATEFUL_ADDRESS,
-      contractInterface: GratefulContract.abi,
-    },
-    "pricePerShare"
-  );
+  const { priceData } = usePricePerShare();
 
   const daiPrice = BigNumber.from(priceData || 0);
   const getVaultAmount = (value: BigNumber) => value.mul(parseEther("1")).mul(parseEther("1")).div(daiPrice);
@@ -86,11 +81,11 @@ const SendGratitude = ({ balance, creator }: SendGratitudeProps) => {
     handleResult(result);
   };
 
-  const title = !!creator ? `Send gratitude to ${creator.name}` : "Send gratitude to a creator";
+  const title = !!creator ? `Transfer to ${creator.name}` : "Transfer to a creator";
 
   return (
     <Box>
-      <Button onClick={onOpen}>Send</Button>
+      <Button onClick={onOpen}>Transfer</Button>
 
       <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
         <ModalOverlay />

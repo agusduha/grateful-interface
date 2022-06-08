@@ -14,7 +14,7 @@ import Subscribers from "../components/grateful/Subscribers";
 const Home: NextPage = () => {
   return (
     <Container height="100vh">
-      <Hero title="Grateful Dashboard" />
+      <Hero title="grateful dashboard" />
       <Main>
         <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(4, 1fr)" gap={4}>
           <MainGridItem>

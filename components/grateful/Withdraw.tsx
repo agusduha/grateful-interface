@@ -25,6 +25,7 @@ import { useState } from "react";
 import { useContractRead, useContractWrite } from "wagmi";
 import GratefulContract from "../../abis/Grateful.json";
 import { GRATEFUL_ADDRESS } from "../../constants";
+import usePricePerShare from "../../hooks/usePricePerShare";
 import useTransactionToast from "../../hooks/useTransactionToast";
 
 interface WithdrawProps {
@@ -50,13 +51,7 @@ const Withdraw = ({ balance }: WithdrawProps) => {
     "withdrawFunds"
   );
 
-  const [{ data: priceData }] = useContractRead(
-    {
-      addressOrName: GRATEFUL_ADDRESS,
-      contractInterface: GratefulContract.abi,
-    },
-    "pricePerShare"
-  );
+  const { priceData } = usePricePerShare();
 
   const daiPrice = BigNumber.from(priceData || 0);
   const getVaultAmount = (value: BigNumber) => value.mul(parseEther("1")).mul(parseEther("1")).div(daiPrice);

@@ -3,6 +3,7 @@ CREATE TABLE "Creator" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "address" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "tag" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
