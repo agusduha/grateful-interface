@@ -43,7 +43,7 @@ const CreateLabel = ({ creator }: CreateLabelProps) => {
     };
 
     setLoading(true);
-    const result = await fetch("http://localhost:3000/api/labels", requestOptions);
+    const result = await fetch("/api/labels", requestOptions);
 
     toast({
       title: result.ok ? "Label created!" : "Label creation failed",

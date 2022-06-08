@@ -48,9 +48,9 @@ const ProfileLinks = ({ address }: ProfileLinksProps) => {
 
   const { creator } = useCreator(address);
 
-  const addressLink = `http://localhost:3000/${creator.address}`;
-  const idLink = `http://localhost:3000/${creator.id}`;
-  const tagLink = `http://localhost:3000/${creator.tag}`;
+  const addressLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.address}`;
+  const idLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.id}`;
+  const tagLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.tag}`;
 
   return (
     <Box>

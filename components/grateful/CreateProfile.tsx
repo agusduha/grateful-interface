@@ -49,7 +49,7 @@ const CreateProfile = ({ address }: CreateProfileProps) => {
     };
 
     setLoading(true);
-    const result = await fetch("http://localhost:3000/api/creators", requestOptions);
+    const result = await fetch("/api/creators", requestOptions);
 
     toast({
       title: result.ok ? "Profile created!" : "Profile creation failed",
