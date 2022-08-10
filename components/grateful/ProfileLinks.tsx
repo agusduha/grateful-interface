@@ -48,8 +48,8 @@ const ProfileLinks = ({ address }: ProfileLinksProps) => {
 
   const { creator } = useCreator(address);
 
-  const addressLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.address}`;
-  const idLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.id}`;
+  // const addressLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.address}`;
+  // const idLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.id}`;
   const tagLink = `${process.env.NEXT_PUBLIC_API_URL}/${creator.tag}`;
 
   return (
@@ -64,12 +64,12 @@ const ProfileLinks = ({ address }: ProfileLinksProps) => {
           <ModalBody m={2}>
             <Box>
               <Text>You can use any link you want!</Text>
-              <CreatorLink value={idLink} label={"Grateful ID link"} />
+              {/* <CreatorLink value={idLink} label={"Grateful ID link"} /> */}
               <CreatorLink value={tagLink} label={"Tag link"} />
-              <CreatorLink value={addressLink} label={"Address link"} />
+              {/* <CreatorLink value={addressLink} label={"Address link"} /> */}
               <Text mt={10}>Or use your QR!</Text>
               <Center>
-                <QRCode value={addressLink} size={200} />
+                <QRCode value={tagLink} size={200} />
               </Center>
             </Box>
           </ModalBody>

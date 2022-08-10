@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
@@ -30,7 +30,12 @@ const BalanceCounter = ({ label, symbol, balance, flow, freq }: BalanceCounterPr
     };
   }, [flow, freq, setCount, balance]);
 
-  return <Text>{`${label} ${formatEther(count)} ${symbol}`}</Text>;
+  return (
+    <HStack>
+      <Text fontWeight={700} fontSize="lg">{`${label}`}</Text>)
+      <Text fontSize="lg">{`${formatEther(count)} ${symbol}`}</Text>)
+    </HStack>
+  );
 };
 
 export default BalanceCounter;

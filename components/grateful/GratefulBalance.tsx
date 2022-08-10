@@ -68,18 +68,28 @@ const GratefulBalance = () => {
       <Heading>Grateful balance</Heading>
       {accountData && (
         <>
-          <HStack>
-            <BalanceCounter label={"Vault balance:"} symbol={"yvDAI"} balance={balance} flow={totalFlow} freq={1} />
+          <HStack marginY={3}>
+            {/* <BalanceCounter label={"Vault balance:"} symbol={"yvDAI"} balance={balance} flow={totalFlow} freq={1} /> */}
+            <BalanceCounter label={"DAI balance:"} symbol={"DAI"} balance={daiBalance} flow={daiTotalFlow} freq={1} />
+
             <Center>
               (<StatUpArrow />
               <Text color={"green"}>2.14%</Text>)
             </Center>
           </HStack>
 
-          <BalanceCounter label={"DAI balance:"} symbol={"DAI"} balance={daiBalance} flow={daiTotalFlow} freq={1} />
-          <Text>{`Incoming flow: ${(+formatEther(monthIncomingFlow)).toFixed(4)} DAI per month`}</Text>
-          <Text>{`Outgoing flow: ${(+formatEther(monthOutgoingFlow)).toFixed(4)} DAI per month`}</Text>
-          <Text>{`Total flow: ${(+formatEther(monthTotalFlow)).toFixed(4)} DAI per month`}</Text>
+          <HStack>
+            <Text fontWeight={700}>{"Incoming flow:"}</Text>
+            <Text>{`${(+formatEther(monthIncomingFlow)).toFixed(4)} DAI per month`}</Text>
+          </HStack>
+          <HStack>
+            <Text fontWeight={700}>{"Outgoing flow:"}</Text>
+            <Text>{`${(+formatEther(monthOutgoingFlow)).toFixed(4)} DAI per month`}</Text>
+          </HStack>
+          <HStack>
+            <Text fontWeight={700}>{"Total flow:"}</Text>
+            <Text>{`${(+formatEther(monthTotalFlow)).toFixed(4)} DAI per month`}</Text>
+          </HStack>
           <Spacer />
           <Center m={2} justifyContent={"space-evenly"}>
             <Profile address={accountData.address} />

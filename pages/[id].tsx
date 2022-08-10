@@ -15,6 +15,7 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect } from "react";
 import Deposit from "../components/grateful/Deposit";
 import usePricePerShare from "../hooks/usePricePerShare";
+import DepositAndSubscribe from "../components/grateful/DepositAndSubscribe";
 
 const Crreator: NextPage = () => {
   const router = useRouter();
@@ -70,29 +71,47 @@ const Crreator: NextPage = () => {
       {isError && <Text>Creator not found</Text>}
       {isCreator && (
         <>
-          <Heading>{creator.name}</Heading>
-          <Text>{creator.description}</Text>
-          <Text>Grateful ID: {creator.id}</Text>
+          <Heading fontSize={"5xl"}>{creator.name}</Heading>
+          <Text mt={2} fontSize={"larger"}>
+            {creator.description}
+          </Text>
+          <HStack mt={2}>
+            <Text fontSize={"larger"} fontWeight={700}>
+              {"Grateful ID:"}
+            </Text>
+            <Text fontSize={"larger"}>{`${creator.id}`}</Text>
+          </HStack>
 
-          <Text>
-            Creator address:{" "}
-            <Link href={`https://etherscan.io/address/${creator.address}`} isExternal>
+          <HStack mt={2}>
+            <Text fontSize={"larger"} fontWeight={700}>
+              {"Address:"}
+            </Text>
+            <Link fontSize={"larger"} href={`https://etherscan.io/address/${creator.address}`} isExternal>
               {creator.address} <ExternalLinkIcon mx="2px" />
             </Link>
-          </Text>
+          </HStack>
 
-          <Text>Creator tag: {creator.tag}</Text>
+          <HStack mt={2}>
+            <Text fontSize={"larger"} fontWeight={700}>
+              {"Creator tag:"}
+            </Text>
+            <Text fontSize={"larger"}>{`${creator.tag}`}</Text>
+          </HStack>
 
-          <HStack mt={4}>
-            {hasBalance ? (
-              isSubscribed ? (
-                <Text>User already subscribed</Text>
+          <HStack mt={5}>
+            {accountData?.address !== creator?.address &&
+              (hasBalance ? (
+                isSubscribed ? (
+                  <Text fontSize={"2xl"} fontWeight={700}>
+                    User already subscribed!
+                  </Text>
+                ) : (
+                  <Subscribe balance={formatEther(daiBalance)} creator={creator} />
+                )
               ) : (
-                <Subscribe balance={formatEther(daiBalance)} creator={creator} />
-              )
-            ) : (
-              <Deposit />
-            )}
+                // <Deposit />
+                <DepositAndSubscribe creator={creator} />
+              ))}
           </HStack>
         </>
       )}

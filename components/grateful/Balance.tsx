@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Heading, HStack, Spacer, Text } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { useEffect } from "react";
@@ -40,9 +40,22 @@ const Balance = () => {
       <Heading>Wallet balance</Heading>
       {accountData && (
         <>
-          <Text>{`Ether balance: ${Number(balanceData?.formatted).toFixed(4)} ${balanceData?.symbol}`}</Text>
-          <Text>{`DAI balance: ${Number(daiData?.formatted).toFixed(4)} ${daiData?.symbol}`}</Text>
-          {allowance && <Text>{`DAI allowance: ${formatEther(BigNumber.from(allowance))} ${daiData?.symbol}`}</Text>}
+          <HStack mt={3}>
+            <Text fontWeight={700}>{"Ether balance:"}</Text>
+            <Text>{`${Number(balanceData?.formatted).toFixed(4)} ${balanceData?.symbol}`}</Text>
+          </HStack>
+
+          <HStack>
+            <Text fontWeight={700}>{"DAI balance:"}</Text>
+            <Text>{`${Number(daiData?.formatted).toFixed(4)} ${daiData?.symbol}`}</Text>
+          </HStack>
+
+          {allowance && (
+            <HStack>
+              <Text fontWeight={700}>{"DAI allowance:"}</Text>
+              <Text>{`${formatEther(BigNumber.from(allowance))} ${daiData?.symbol}`}</Text>
+            </HStack>
+          )}
           <Spacer />
           <Center m={2}>
             <Deposit balance={daiData?.formatted} allowance={allowance} />
